@@ -30,6 +30,8 @@ import org.apache.ignite.cache.eviction.EvictionPolicy;
 import org.apache.ignite.cache.eviction.fifo.FifoEvictionPolicy;
 import org.apache.ignite.configuration.CacheConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.Closeable;
@@ -61,6 +63,8 @@ public class IgniteProvider implements Closeable, Provider<Ignite> {
         try {
 
             IgniteConfiguration igniteConfig = new IgniteConfiguration();
+            TcpDiscoverySpi disco = new TcpDiscoverySpi().setIpFinder(new TcpDiscoveryVmIpFinder(true));
+            igniteConfig.setDiscoverySpi(disco);
             igniteConfig.setGridName("druid-cache");
             igniteConfig.setClientMode(false);
             CacheConfiguration<Cache.NamedKey, byte[]> cacheConfig = new CacheConfiguration<>();
